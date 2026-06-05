@@ -1,3 +1,3 @@
-# Language packs for QuizTools (quiz management package for Joomla)
+# Language packs for [QuizTools](https://github.com/fsvblr/quiztools)
 
 in development...
