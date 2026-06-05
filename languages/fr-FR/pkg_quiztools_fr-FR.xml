@@ -6,6 +6,7 @@
 	<authorUrl>https://crowdin.com/ToDo</authorUrl>
 	<version>2026.01.01</version>
 	<description>This fr-FR lang pack for QuizTools package has been installed successfully.</description>
+	<blockChildUninstall>true</blockChildUninstall>
 	<fileset>
 		<files folder="admin" target="administrator/language/fr-FR">
 			<filename>com_quiztools.ini</filename>
@@ -31,4 +32,7 @@
 			<filename>com_quiztools.ini</filename>
 		</files>
 	</fileset>
+	<updateservers>
+		<server type="extension" name="QuizTools Updates">https://raw.githubusercontent.com/fsvblr/updateservers/master/quiztools-languages/quiztools-languages.xml</server>
+    </updateservers>
 </extension>
