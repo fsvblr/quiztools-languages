@@ -12,18 +12,18 @@
 			<filename>com_quiztools.sys.ini</filename>
 			<filename>plg_quiztools_blank.ini</filename>
 			<filename>plg_quiztools_blank.sys.ini</filename>
-      <filename>plg_quiztools_boilerplate.ini</filename>
+            <filename>plg_quiztools_boilerplate.ini</filename>
 			<filename>plg_quiztools_boilerplate.sys.ini</filename>
 			<filename>plg_quiztools_hotspotsmultiple.ini</filename>
-      <filename>plg_quiztools_hotspotsmultiple.sys.ini</filename>
+            <filename>plg_quiztools_hotspotsmultiple.sys.ini</filename>
 			<filename>plg_quiztools_mchoice.ini</filename>
 			<filename>plg_quiztools_mchoice.sys.ini</filename>
-      <filename>plg_quiztools_mresponse.ini</filename>
+            <filename>plg_quiztools_mresponse.ini</filename>
 			<filename>plg_quiztools_mresponse.sys.ini</filename>
-      <filename>plg_quiztools_truefalse.ini</filename>
+            <filename>plg_quiztools_truefalse.ini</filename>
 			<filename>plg_quiztools_truefalse.sys.ini</filename>
 			<filename>plg_quiztoolspayment_virtuemart.ini</filename>
-      <filename>plg_quiztoolspayment_virtuemart.sys.ini</filename>
+            <filename>plg_quiztoolspayment_virtuemart.sys.ini</filename>
 			<filename>plg_system_quiztools.ini</filename>
 			<filename>plg_system_quiztools.sys.ini</filename>
 		</files>
