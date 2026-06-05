@@ -1,0 +1,108 @@
+name: Release Languages and Update Showcase
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+    paths:
+      - 'languages/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get current date for version
+        id: versioning
+        run: echo "VERSION=$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
+
+      - name: Detect changed languages
+        id: detect_changes
+        run: |
+          CHANGED_LANGS=$(git diff --name-only HEAD^ HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
+          echo "Changed languages: $CHANGED_LANGS"
+          echo "langs=$CHANGED_LANGS" >> $GITHUB_OUTPUT
+
+      - name: Process, Zip and Calculate SHA
+        if: steps.detect_changes.outputs.langs != ''
+        run: |
+          VERSION="${{ steps.versioning.outputs.VERSION }}"
+          
+          # Создаем чистый файл для хранения хэшей
+          > sha_list.txt
+          
+          for lang in ${{ steps.detect_changes.outputs.langs }}; do
+            echo "Processing $lang..."
+            
+            ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
+            
+            cd languages/$lang
+            sed -i "s|<version>.*</version>|<version>$VERSION</version>|g" pkg_quiztools_$lang.xml
+            zip -r ../../$ZIP_NAME pkg_quiztools_$lang.xml admin site
+            cd ../..
+            
+            # Записываем хэш в локальный текстовый файл
+            SHA256_HASH=$(sha256sum "$ZIP_NAME" | awk '{print $1}')
+            echo "${lang}:${SHA256_HASH}" >> sha_list.txt
+            
+            DOWNLOAD_URL="https://github.com{{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
+            
+            sed -i -E "s|(id=\"ver-$lang\">)[^<]*|\1$VERSION|g" index.html
+            sed -i -E "s|(id=\"link-$lang\" href=\")[^\"]*|\1$DOWNLOAD_URL|g" index.html
+          done
+
+      - name: Commit Showcase (index.html)
+        if: steps.detect_changes.outputs.langs != ''
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@://github.com"
+          git add index.html
+          git commit -m "Update showcase page for updated languages [skip ci]" || echo "No changes"
+          git push
+
+      - name: Create GitHub Releases
+        if: steps.detect_changes.outputs.langs != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION="${{ steps.versioning.outputs.VERSION }}"
+          for lang in ${{ steps.detect_changes.outputs.langs }}; do
+            TAG="$lang-$VERSION"
+            ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
+            gh release create "$TAG" "$ZIP_NAME" --title "$lang v$VERSION" --notes "Release for $lang"
+          done
+
+      - name: Trigger Update Server Repository
+        if: steps.detect_changes.outputs.langs != ''
+        run: |
+          # Исправлено: берем версию из outputs правильного шага
+          VERSION="${{ steps.versioning.outputs.VERSION }}"
+          
+          for lang in ${{ steps.detect_changes.outputs.langs }}; do
+            ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
+            DOWNLOAD_URL="https://github.com{{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
+            
+            # Читаем SHA из текстового файла средствами Bash
+            CURRENT_SHA=$(grep "^${lang}:" sha_list.txt | cut -d':' -f2)
+            
+            echo "Sending $lang with SHA $CURRENT_SHA to second repo..."
+            
+            # Отправка вебхука (замените НАЗВАНИЕ_ВТОРОГО_РЕПО)
+            curl -L \
+              -X POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "Authorization: Bearer ${{ secrets.UPDATES_REPO_TOKEN }}" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              https://github.com{{ github.repository_owner }}/НАЗВАНИЕ_ВТОРОГО_РЕПО/dispatches \
+              -d "{\"event_type\": \"language_updated\", \"client_payload\": {\"lang\": \"$lang\", \"version\": \"$VERSION\", \"url\": \"$DOWNLOAD_URL\", \"sha256\": \"$CURRENT_SHA\"}}"
+          done
