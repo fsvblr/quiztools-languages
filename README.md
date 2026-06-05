@@ -1,2 +1,3 @@
-# quiztools-languages
-Language packs for QuizTools (quiz management package for Joomla)
+# Language packs for QuizTools (quiz management package for Joomla)
+
+in development...
