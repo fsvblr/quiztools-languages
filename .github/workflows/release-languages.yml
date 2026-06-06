@@ -101,7 +101,6 @@ jobs:
       - name: Trigger Update Server Repository
         if: steps.detect_changes.outputs.langs != ''
         run: |
-          # Исправлено: берем версию из outputs правильного шага
           VERSION="${{ steps.versioning.outputs.VERSION }}"
           
           for lang in ${{ steps.detect_changes.outputs.langs }}; do
@@ -119,6 +118,6 @@ jobs:
               -H "Accept: application/vnd.github+json" \
               -H "Authorization: Bearer ${{ secrets.UPDATES_REPO_TOKEN }}" \
               -H "X-GitHub-Api-Version: 2022-11-28" \
-              "https://github.com/${{ github.repository_owner }}/updateservers/dispatches" \
+              "https://github.com/fsvblr/updateservers/dispatches" \
               -d "{\"event_type\": \"quiztools_language_updated\", \"client_payload\": {\"lang\": \"$lang\", \"version\": \"$VERSION\", \"url\": \"$DOWNLOAD_URL\", \"sha256\": \"$CURRENT_SHA\"}}"
           done
