@@ -24,7 +24,7 @@ jobs:
 
       - name: Get current date for version
         id: versioning
-        run: echo "VERSION=$(date +'%Y.%m.%d')" >> $GITHUB_OUTPUT
+        run: echo "VERSION=$(date +'%Y.%m.%d.%H%M')" >> $GITHUB_OUTPUT
 
       - name: Detect changed languages
         id: detect_changes
