@@ -9,13 +9,19 @@ on:
     paths:
       - 'languages/**'
   workflow_dispatch: # Добавляет кнопку ручного запуска
+    inputs:
+      debug_langs:
+        description: 'fr-FR'  # Языки для принудительной отладки (через пробел, например: fr-FR it-IT)
+        required: false
+        default: ''
 
 permissions:
   contents: write
 
 jobs:
   build:
-    if: github.event.pull_request.merged == true
+    # Запускать если PR слит ИЛИ если это ручной запуск
+    if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -30,7 +36,13 @@ jobs:
       - name: Detect changed languages
         id: detect_changes
         run: |
-          CHANGED_LANGS=$(git diff --name-only HEAD^ HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
+          # Если запуск ручной и передан input, берем его. Иначе — ищем через git diff.
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.debug_langs }}" ]; then
+            CHANGED_LANGS="${{ github.event.inputs.debug_langs }}"
+          else
+            CHANGED_LANGS=$(git diff --name-only HEAD^ HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
+          fi
+          
           echo "Changed languages: $CHANGED_LANGS"
           echo "langs=$CHANGED_LANGS" >> $GITHUB_OUTPUT
 
@@ -55,8 +67,8 @@ jobs:
             # Записываем хэш в локальный текстовый файл
             SHA256_HASH=$(sha256sum "$ZIP_NAME" | awk '{print $1}')
             echo "${lang}:${SHA256_HASH}" >> sha_list.txt
-            
-            DOWNLOAD_URL="https://github.com{{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
+
+            DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
             
             sed -i -E "s|(id=\"ver-$lang\">)[^<]*|\1$VERSION|g" index.html
             sed -i -E "s|(id=\"link-$lang\" href=\")[^\"]*|\1$DOWNLOAD_URL|g" index.html
@@ -91,7 +103,7 @@ jobs:
           
           for lang in ${{ steps.detect_changes.outputs.langs }}; do
             ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
-            DOWNLOAD_URL="https://github.com{{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
+            DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
             
             # Читаем SHA из текстового файла средствами Bash
             CURRENT_SHA=$(grep "^${lang}:" sha_list.txt | cut -d':' -f2)
