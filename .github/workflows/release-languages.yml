@@ -8,7 +8,7 @@ on:
       - main
     paths:
       - 'languages/**'
-  workflow_dispatch: # Добавляет кнопку ручного запуска
+  workflow_dispatch: # Adds a manual start button
     inputs:
       debug_langs:
         description: 'Languages ​​for forced manual debugging (separated by a space, for example: fr-FR it-IT)'
@@ -23,7 +23,7 @@ env:
 
 jobs:
   build:
-    # Запускать если PR слит ИЛИ если это ручной запуск
+    # Run if PR is merged OR if it is a manual run
     if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
@@ -39,7 +39,7 @@ jobs:
       - name: Detect changed languages
         id: detect_changes
         run: |
-          # Если запуск ручной и передан input, берем его. Иначе — ищем через git diff.
+          # If the run is manual and input is passed, we use it. Otherwise, we search for it using git diff.
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.debug_langs }}" ]; then
             CHANGED_LANGS="${{ github.event.inputs.debug_langs }}"
           else
@@ -54,7 +54,7 @@ jobs:
         run: |
           VERSION="${{ steps.versioning.outputs.VERSION }}"
           
-          # Создаем чистый файл для хранения хэшей
+          # Create a clean file to store hashes
           > sha_list.txt
           
           for lang in ${{ steps.detect_changes.outputs.langs }}; do
@@ -67,7 +67,7 @@ jobs:
             zip -r ../../$ZIP_NAME pkg_quiztools_$lang.xml admin site
             cd ../..
             
-            # Записываем хэш в локальный текстовый файл
+            # Write the hash to a local text file
             SHA256_HASH=$(sha256sum "$ZIP_NAME" | awk '{print $1}')
             echo "${lang}:${SHA256_HASH}" >> sha_list.txt
 
@@ -107,12 +107,12 @@ jobs:
             ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
             DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
             
-            # Читаем SHA из текстового файла средствами Bash
+            # Reading SHA from a text file using Bash
             CURRENT_SHA=$(grep "^${lang}:" sha_list.txt | cut -d':' -f2)
             
             echo "Sending $lang with SHA $CURRENT_SHA to second repo..."
             
-            # Отправка вебхука 
+            # Sending a webhook 
             curl -L \
               -X POST \
               -H "Accept: application/vnd.github+json" \
