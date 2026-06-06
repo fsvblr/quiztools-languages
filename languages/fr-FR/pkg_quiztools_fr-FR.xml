@@ -8,7 +8,7 @@
 	<description>French language files for QuizTools package.</description>
 	<blockChildUninstall>true</blockChildUninstall>
 	<fileset>
-		<files folder="admin" target="administrator/language/fr-FR">
+		<files folder="admin" destination="administrator/language/fr-FR">
 			<filename>com_quiztools.ini</filename>
 			<filename>com_quiztools.sys.ini</filename>
 			<filename>plg_quiztools_blank.ini</filename>
@@ -28,7 +28,7 @@
 			<filename>plg_system_quiztools.ini</filename>
 			<filename>plg_system_quiztools.sys.ini</filename>
 		</files>
-		<files folder="site" target="language/fr-FR">
+		<files folder="site" destination="language/fr-FR">
 			<filename>com_quiztools.ini</filename>
 		</files>
 	</fileset>
