@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="file" version="6.1" method="upgrade">
-	<name>pkg_quiztools_fr-FR</name>
+	<name>QuizTools package language - French</name>
 	<author>French Translation Team</author>
 	<license>GNU General Public License version 2 or later</license>
 	<authorUrl>https://crowdin.com/ToDo</authorUrl>
 	<version>2026.01.01</version>
-	<description>This fr-FR lang pack for QuizTools package has been installed successfully.</description>
+	<description>French language files for QuizTools package.</description>
 	<blockChildUninstall>true</blockChildUninstall>
 	<fileset>
 		<files folder="admin" target="administrator/language/fr-FR">
