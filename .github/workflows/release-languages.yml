@@ -11,7 +11,7 @@ on:
   workflow_dispatch: # Добавляет кнопку ручного запуска
     inputs:
       debug_langs:
-        description: 'fr-FR'  # Языки для принудительной отладки (через пробел, например: fr-FR it-IT)
+        description: 'Languages ​​for forced manual debugging (separated by a space, for example: fr-FR it-IT)'
         required: false
         default: ''
 
