@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension type="file" version="2.5" method="upgrade">
 	<name>QuizTools package language - French</name>
-	<author>French Translation Team</author>
+	<author>QuizTools</author>
 	<license>GNU General Public License version 2 or later</license>
 	<authorUrl>https://crowdin.com/ToDo</authorUrl>
 	<version>2026.01.01.0001</version>
