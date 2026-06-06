@@ -64,6 +64,7 @@ jobs:
             
             cd languages/$lang
             sed -i "s|<version>.*</version>|<version>$VERSION</version>|g" pkg_quiztools_$lang.xml
+            sed -i "s|<creationDate>.*</creationDate>|<creationDate>$(date +'%Y-%m-%d')</creationDate>|g" pkg_quiztools_$lang.xml
             zip -r ../../$ZIP_NAME pkg_quiztools_$lang.xml admin site
             cd ../..
             
