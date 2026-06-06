@@ -4,7 +4,7 @@
 	<author>French Translation Team</author>
 	<license>GNU General Public License version 2 or later</license>
 	<authorUrl>https://crowdin.com/ToDo</authorUrl>
-	<version>2026.01.01</version>
+	<version>2026.01.01.0001</version>
 	<description>French language files for QuizTools package.</description>
 	<blockChildUninstall>true</blockChildUninstall>
 	<fileset>
