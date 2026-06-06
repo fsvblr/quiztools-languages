@@ -8,6 +8,7 @@ on:
       - main
     paths:
       - 'languages/**'
+  workflow_dispatch: # Добавляет кнопку ручного запуска
 
 permissions:
   contents: write
