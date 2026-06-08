@@ -1,5 +1,5 @@
 files:
-  - source: /admin/*.ini
+  - source: /master/admin/*.ini
     translation: /languages/%locale%/admin/%original_file_name%
-  - source: /site/*.ini
+  - source: /master/site/*.ini
     translation: /languages/%locale%/site/%original_file_name%
