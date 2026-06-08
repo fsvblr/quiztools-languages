@@ -1,8 +1,5 @@
 files:
-  # All Backend INI Files
   - source: /admin/*.ini
     translation: /languages/%locale_with_dash%/admin/%original_file_name%
-
-  # All Frontend INI Files
   - source: /site/*.ini
     translation: /languages/%locale_with_dash%/site/%original_file_name%
