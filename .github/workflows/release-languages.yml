@@ -11,7 +11,7 @@ on:
   workflow_dispatch: # Adds a manual start button
     inputs:
       debug_langs:
-        description: 'Languages ​​for forced manual debugging (separated by a space, for example: fr-FR it-IT)'
+        description: 'Languages for forced manual debugging (separated by a space, for example: fr-FR it-IT)'
         required: false
         default: ''
 
@@ -46,8 +46,18 @@ jobs:
             CHANGED_LANGS=$(git diff --name-only HEAD^ HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
           fi
           
-          echo "Changed languages: $CHANGED_LANGS"
-          echo "langs=$CHANGED_LANGS" >> $GITHUB_OUTPUT
+          # Exclude en-GB from being processed/released
+          CLEANED_LANGS=""
+          for lang in $CHANGED_LANGS; do
+            if [ "$lang" != "en-GB" ]; then
+              CLEANED_LANGS="$CLEANED_LANGS $lang"
+            fi
+          done
+          # Trim leading/trailing spaces
+          CLEANED_LANGS=$(echo $CLEANED_LANGS | xargs)
+          
+          echo "Changed languages (excluding en-GB): $CLEANED_LANGS"
+          echo "langs=$CLEANED_LANGS" >> $GITHUB_OUTPUT
 
       - name: Process, Zip and Calculate SHA
         if: steps.detect_changes.outputs.langs != ''
@@ -59,21 +69,54 @@ jobs:
           
           for lang in ${{ steps.detect_changes.outputs.langs }}; do
             echo "Processing $lang..."
-            
+          
             ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
-            
+            MANIFEST="pkg_quiztools_$lang.xml"
+          
             cd languages/$lang
-            sed -i "s|<version>.*</version>|<version>$VERSION</version>|g" pkg_quiztools_$lang.xml
-            sed -i "s|<creationDate>.*</creationDate>|<creationDate>$(date +'%Y-%m-%d')</creationDate>|g" pkg_quiztools_$lang.xml
-            zip -r ../../$ZIP_NAME pkg_quiztools_$lang.xml admin site
+          
+            # Validate ini-files inside <fileset> tags using xmlstarlet
+            echo "Validating fileset manifests in $MANIFEST..."
+          
+            # 1. Let's insert the correct target language tag into the target attributes.
+            # sed -i "s|language/en-GB|language/$lang|g" "$MANIFEST"
+          
+            # 2. Find all <filename> elements inside <files>
+            FILE_LIST=$(xmlstarlet sel -t -m "//fileset/files/filename" -v "../@folder" -o ":" -v "." -n "$MANIFEST")
+          
+            echo "$FILE_LIST" | while IFS=: read -r folder filename; do
+              if [ -z "$filename" ]; then continue; fi
+          
+              REAL_PATH="$folder/$filename"
+          
+              # If the file is not physically on the disk, remove that specific <filename> tag from the XML
+              if [ ! -f "$REAL_PATH" ]; then
+                echo "WARNING: File $REAL_PATH not found! Removing from XML."
+                xmlstarlet ed -L -d "//fileset/files[@folder='$folder']/filename[text()='$filename']" "$MANIFEST"
+              fi
+            done
+          
+            # 3. Clean empty <files> blocks if all files have been deleted from them
+            xmlstarlet ed -L -d "//fileset/files[not(filename)]" "$MANIFEST"
+          
+            # Apply the version and current date
+            sed -i "s|<version>.*</version>|<version>$VERSION</version>|g" "$MANIFEST"
+            sed -i "s|<creationDate>.*</creationDate>|<creationDate>$(date +'%Y-%m-%d')</creationDate>|g" "$MANIFEST"
+          
+            # Package compression (we archive only those folders that physically exist)
+            ZIP_PATHS="$MANIFEST"
+            [ -d "admin" ] && ZIP_PATHS="$ZIP_PATHS admin"
+            [ -d "site" ] && ZIP_PATHS="$ZIP_PATHS site"
+          
+            zip -r ../../$ZIP_NAME $ZIP_PATHS
             cd ../..
-            
-            # Write the hash to a local text file
+          
+            # Writing a hash to a local file
             SHA256_HASH=$(sha256sum "$ZIP_NAME" | awk '{print $1}')
             echo "${lang}:${SHA256_HASH}" >> sha_list.txt
 
             DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
-            
+          
             sed -i -E "s|(id=\"ver-$lang\">)[^<]*|\1$VERSION|g" index.html
             sed -i -E "s|(id=\"link-$lang\" href=\")[^\"]*|\1$DOWNLOAD_URL|g" index.html
           done
@@ -82,7 +125,7 @@ jobs:
         if: steps.detect_changes.outputs.langs != ''
         run: |
           git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@://github.com"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add index.html
           git commit -m "Update showcase page for updated languages [skip ci]" || echo "No changes"
           git push
@@ -107,12 +150,12 @@ jobs:
           for lang in ${{ steps.detect_changes.outputs.langs }}; do
             ZIP_NAME="pkg_quiztools_${lang}_${VERSION}.zip"
             DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/$lang-$VERSION/$ZIP_NAME"
-            
+          
             # Reading SHA from a text file using Bash
             CURRENT_SHA=$(grep "^${lang}:" sha_list.txt | cut -d':' -f2)
-            
+          
             echo "Sending $lang with SHA $CURRENT_SHA to second repo..."
-            
+          
             # Sending a webhook 
             curl -L \
               -X POST \
