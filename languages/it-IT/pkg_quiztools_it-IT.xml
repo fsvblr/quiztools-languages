@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="file" version="1.0" method="upgrade">
+    <name>QuizTools package language - Italian</name>
+    <creationDate>2026-01-01</creationDate>
+    <author>QuizTools</author>
+    <license>GNU General Public License version 2 or later</license>
+    <authorUrl>https://crowdin.com/project/quiztools</authorUrl>
+    <version>2026.01.01.0001</version>
+    <description>Italian language files for QuizTools package.</description>
+    <blockChildUninstall>true</blockChildUninstall>
+    <fileset>
+        <files folder="admin" target="administrator/language/it-IT">
+            <filename>com_quiztools.ini</filename>
+            <filename>com_quiztools.sys.ini</filename>
+            <filename>plg_quiztools_blank.ini</filename>
+            <filename>plg_quiztools_blank.sys.ini</filename>
+            <filename>plg_quiztools_boilerplate.ini</filename>
+            <filename>plg_quiztools_boilerplate.sys.ini</filename>
+            <filename>plg_quiztools_hotspotsmultiple.ini</filename>
+            <filename>plg_quiztools_hotspotsmultiple.sys.ini</filename>
+            <filename>plg_quiztools_mchoice.ini</filename>
+            <filename>plg_quiztools_mchoice.sys.ini</filename>
+            <filename>plg_quiztools_mresponse.ini</filename>
+            <filename>plg_quiztools_mresponse.sys.ini</filename>
+            <filename>plg_quiztools_truefalse.ini</filename>
+            <filename>plg_quiztools_truefalse.sys.ini</filename>
+            <filename>plg_quiztoolspayment_virtuemart.ini</filename>
+            <filename>plg_quiztoolspayment_virtuemart.sys.ini</filename>
+            <filename>plg_system_quiztools.ini</filename>
+            <filename>plg_system_quiztools.sys.ini</filename>
+        </files>
+        <files folder="site" target="language/it-IT">
+            <filename>com_quiztools.ini</filename>
+        </files>
+    </fileset>
+    <updateservers>
+        <server type="extension" name="QuizTools Languages Updates">https://raw.githubusercontent.com/fsvblr/updateservers/master/quiztools-languages/quiztools-languages.xml</server>
+    </updateservers>
+</extension>
