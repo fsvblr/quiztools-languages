@@ -47,7 +47,7 @@ jobs:
             GIT_CHANGED_LANGS="${{ github.event.inputs.debug_langs }}"
           else
             # For the push trigger, we reliably request the list of changed files in the commit
-            GIT_CHANGED_LANGS=$(git diff-tree --no-commit-id --name-only -r HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
+            GIT_CHANGED_LANGS=$(git diff-tree --no-commit-id --name-only -r -m HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
           fi
           
           CLEANED_LANGS=""
@@ -62,7 +62,7 @@ jobs:
             echo "Checking git changes for $lang..."
           
             # Check for actual changes in text strings (.ini)
-            REAL_CHANGES=$(git diff-tree --no-commit-id -r -p HEAD -- "languages/$lang/" | grep '^[+][^+]' | grep -v '^[+][[:space:]]*;' | grep -v '^[+][[:space:]]*$' || true)
+            REAL_CHANGES=$(git diff-tree --no-commit-id -r -m -p HEAD -- "languages/$lang/" | grep '^[+][^+]' | grep -v '^[+][[:space:]]*;' | grep -v '^[+][[:space:]]*$' || true)
           
             if [ -n "$REAL_CHANGES" ]; then
               echo "=> Language $lang has REAL translation changes. Adding to build queue."
