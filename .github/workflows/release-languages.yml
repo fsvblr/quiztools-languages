@@ -5,7 +5,7 @@ on:
     types:
       - closed
     branches:
-      - main
+      - master
     paths:
       - 'languages/**'
   workflow_dispatch: # Adds a manual start button
