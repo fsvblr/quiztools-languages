@@ -4,7 +4,7 @@
 
 List of available language packs for QuizTools package: https://fsvblr.github.io/quiztools-languages/.
 
-Project on [crowdin.com](https://crowdin.com/ToDo).
+Project on [crowdin.com](https://crowdin.com/project/quiztools).
 
 ## Flow:
 - File changes in crowdin.com automatically create a pull request here.
