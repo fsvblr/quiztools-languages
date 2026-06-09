@@ -4,7 +4,7 @@
 	<creationDate>2026-01-01</creationDate>
 	<author>QuizTools</author>
 	<license>GNU General Public License version 2 or later</license>
-	<authorUrl>https://crowdin.com/ToDo</authorUrl>
+	<authorUrl>https://crowdin.com/project/quiztools</authorUrl>
 	<version>2026.01.01.0001</version>
 	<description>French language files for QuizTools package.</description>
 	<blockChildUninstall>true</blockChildUninstall>
