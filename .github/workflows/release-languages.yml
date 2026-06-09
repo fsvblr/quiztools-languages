@@ -1,9 +1,7 @@
 name: Release Languages and Update Showcase
 
 on:
-  pull_request:
-    types:
-      - closed
+  push:
     branches:
       - master
     paths:
@@ -23,8 +21,8 @@ env:
 
 jobs:
   build:
-    # Run if PR is merged OR if it is a manual run
-    if: ${{ github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch' }}
+    # Runs on any push to master or when manually called
+    if: ${{ github.event_name == 'push' || github.event_name == 'workflow_dispatch' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -48,9 +46,10 @@ jobs:
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.debug_langs }}" ]; then
             GIT_CHANGED_LANGS="${{ github.event.inputs.debug_langs }}"
           else
-            GIT_CHANGED_LANGS=$(git diff --name-only HEAD^ HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
+            # For the push trigger, we reliably request the list of changed files in the commit
+            GIT_CHANGED_LANGS=$(git diff-tree --no-commit-id --name-only -r HEAD | grep '^languages/' | cut -d'/' -f2 | sort -u || true)
           fi
-
+          
           CLEANED_LANGS=""
 
           # Check every changed language
@@ -59,25 +58,23 @@ jobs:
             if [ "$lang" = "en-GB" ]; then
               continue
             fi
-
+          
             echo "Checking git changes for $lang..."
-
-            # Check what exactly has changed inside the files of this language.
-            # We look at the diff (difference) of the lines that were ADDED (starting with +)
-            # and trim off comment lines (;), empty lines, and Git metadata.
-            REAL_CHANGES=$(git diff HEAD^ HEAD -- "languages/$lang/" | grep '^[+][^+]' | grep -v '^[+][[:space:]]*;' | grep -v '^[+][[:space:]]*$' || true)
-
+          
+            # Check for actual changes in text strings (.ini)
+            REAL_CHANGES=$(git diff-tree --no-commit-id -r -p HEAD -- "languages/$lang/" | grep '^[+][^+]' | grep -v '^[+][[:space:]]*;' | grep -v '^[+][[:space:]]*$' || true)
+          
             if [ -n "$REAL_CHANGES" ]; then
               echo "=> Language $lang has REAL translation changes. Adding to build queue."
               CLEANED_LANGS="$CLEANED_LANGS $lang"
             else
-              echo "=> Language $lang changed in Git, but has NO new translation lines (only comments, metadata, or spacing updated). Skipping."
+              echo "=> Language $lang changed in Git, but has NO new translation lines. Skipping."
             fi
           done
 
           # Trim leading/trailing spaces
           CLEANED_LANGS=$(echo $CLEANED_LANGS | xargs)
-
+          
           echo "Final languages list to build and release: $CLEANED_LANGS"
           echo "langs=$CLEANED_LANGS" >> $GITHUB_OUTPUT
 
