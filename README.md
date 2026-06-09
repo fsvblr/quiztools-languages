@@ -2,7 +2,7 @@
 
 List of available language packs for **QuizTools** package: https://fsvblr.github.io/quiztools-languages/.
 
-Project on [crowdin.com](https://crowdin.com/project/quiztools).<br>
+Project on [crowdin.com](https://crowdin.com/project/quiztools). [![Crowdin](https://badges.crowdin.net/quiztools/localized.svg)](https://crowdin.com/project/quiztools)<br>
 You can participate in translating the package into your language at **Crowdin**. If your language isn't listed, please submit a "Request New Language" through the Crowdin interface.
 
 ## License
