@@ -4,8 +4,9 @@
     <meta charset="UTF-8">
     <title>QuizTools Language Packs</title>
     <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; position: relative; }
-        .icon-github { position: absolute; top: 2rem; rigth: 2rem; }
+        body { font-family: sans-serif; position: relative; }
+        .icon-github { position: absolute; top: 2rem; right: 2rem; }
+        .main { max-width: 800px; margin: 40px auto; padding: 0 20px; }
         .lang-card { border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border-radius: 5px; }
         .lang-desc { display: flex; align-items: center; }
         .lang-desc img { margin-left: 1rem; }
@@ -14,31 +15,32 @@
 </head>
 <body>
     <img class="icon-github" alt="GitHub Badge" src="https://img.shields.io/badge/github-repo-blue?logo=github&link=https%3A%2F%2Fgithub.com%2Ffsvblr%2Fquiztools-languages" />
-    <h1><a href="https://github.com/fsvblr/quiztools" target="_blank" rel="nofollow noopener">QuizTools</a> Language Packs</h1>
-    <p style="margin-bottom:0; line-height:1.5;">Download the language pack for your first installation. In the future, the package will be updated through the Joomla admin panel.</p>
-    <p style="margin:16px 0 24px; line-height:1.5;">You can participate in translating the package into your language at <a href="https://crowdin.com/project/quiztools" rel="nofollow noopener" target="_blank">Crowdin</a>. 
-        If your language isn't listed, please submit a "Request New Language" through the Crowdin interface.</p>
+    <div class="main">
+        <h1><a href="https://github.com/fsvblr/quiztools" target="_blank" rel="nofollow noopener">QuizTools</a> Language Packs</h1>
+        <p style="margin-bottom:0; line-height:1.5;">Download the language pack for your first installation. In the future, the package will be updated through the Joomla admin panel.</p>
+        <p style="margin:16px 0 24px; line-height:1.5;">You can participate in translating the package into your language at <a href="https://crowdin.com/project/quiztools" rel="nofollow noopener" target="_blank">Crowdin</a>. If your language isn't listed, please submit a "Request New Language" through the Crowdin interface.</p>
   
-    <div class="lang-card">
-        <div class="lang-desc">
-            <div>
-                <strong>French (fr-FR)</strong><br>
-                <small>Version: <span id="ver-fr-FR">2026.06.09.1821</span></small>
+        <div class="lang-card">
+            <div class="lang-desc">
+                <div>
+                    <strong>French (fr-FR)</strong><br>
+                    <small>Version: <span id="ver-fr-FR">2026.06.09.1821</span></small>
+                </div>
+                <img alt="fr translation" src="https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=plastic&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-17722581-904363.json" >
             </div>
-            <img alt="fr translation" src="https://img.shields.io/badge/dynamic/json?color=blue&label=fr&style=plastic&logo=crowdin&query=%24.progress.0.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-17722581-904363.json" >
+            <a id="link-fr-FR" href="https://github.com/fsvblr/quiztools-languages/releases/download/fr-FR-2026.06.09.1821/pkg_quiztools_fr-FR_2026.06.09.1821.zip" class="btn">Download Language Pack</a>
         </div>
-        <a id="link-fr-FR" href="https://github.com/fsvblr/quiztools-languages/releases/download/fr-FR-2026.06.09.1821/pkg_quiztools_fr-FR_2026.06.09.1821.zip" class="btn">Download Language Pack</a>
-    </div>
 
-    <div class="lang-card">
-        <div class="lang-desc">
-            <div>
-                <strong>Italian (it-IT)</strong><br>
-                <small>Version: <span id="ver-it-IT">2026.06.09.1821</span></small>
+        <div class="lang-card">
+            <div class="lang-desc">
+                <div>
+                    <strong>Italian (it-IT)</strong><br>
+                    <small>Version: <span id="ver-it-IT">2026.06.09.1821</span></small>
+                </div>
+                <img alt="it translation" src="https://img.shields.io/badge/dynamic/json?color=blue&label=it&style=plastic&logo=crowdin&query=%24.progress.1.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-17722581-904363.json" >
             </div>
-            <img alt="it translation" src="https://img.shields.io/badge/dynamic/json?color=blue&label=it&style=plastic&logo=crowdin&query=%24.progress.1.data.translationProgress&url=https%3A%2F%2Fbadges.awesome-crowdin.com%2Fstats-17722581-904363.json" >
+            <a id="link-it-IT" href="https://github.com/fsvblr/quiztools-languages/releases/download/it-IT-2026.06.09.1821/pkg_quiztools_it-IT_2026.06.09.1821.zip" class="btn">Download Language Pack</a>
         </div>
-        <a id="link-it-IT" href="https://github.com/fsvblr/quiztools-languages/releases/download/it-IT-2026.06.09.1821/pkg_quiztools_it-IT_2026.06.09.1821.zip" class="btn">Download Language Pack</a>
     </div>
 </body>
 </html>
