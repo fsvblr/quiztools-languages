@@ -34,6 +34,6 @@
         </files>
     </fileset>
     <updateservers>
-        <server type="extension" name="QuizTools Languages Updates">https://raw.githubusercontent.com/fsvblr/updateservers/master/quiztools-languages/quiztools-languages.xml</server>
+        <server type="extension" name="QuizTools Languages Updates">https://raw.githubusercontent.com/fsvblr/updateservers/master/quiztools-languages/it-IT.xml</server>
     </updateservers>
 </extension>
